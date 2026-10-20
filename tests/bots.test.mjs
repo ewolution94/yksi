@@ -267,7 +267,9 @@ test('the master decides within 150 ms at its real budget: median and slowest ov
   const slowest = times[times.length - 1];
   t.diagnostic(`master: ${times.length} moves, median ${median.toFixed(1)} ms, slowest ${slowest.toFixed(1)} ms`);
   assert.ok(times.length >= 120, `${times.length} moves`);
-  assert.ok(median < 75, `median ${median.toFixed(1)} ms`);
+  // A slower machine (CI's runner, the NAS) reaches the clock's stop before the count of plays: the
+  // median then sits at the stop, plus the trial running when it struck. Never over the 150 ms a move.
+  assert.ok(median < real.MASTER_MS + 15, `median ${median.toFixed(1)} ms (stop ${real.MASTER_MS} ms)`);
   assert.ok(slowest < 150, `slowest ${slowest.toFixed(1)} ms`);
 });
 
