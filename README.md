@@ -84,7 +84,8 @@ master decides in about 9 ms (20 ms at most).
 ```bash
 npm install
 npm run dev          # the whole app on one port (6710): the table server runs inside Vite
-npm test             # the rules, the bots and the rooms (node:test)
+npm test             # the unit tests: the rules, the bots and the rooms on fixed deals (CI runs these)
+npm run test:sim     # the simulated games: whole matches by bots and random players, the bots' timing (local only)
 npm run check        # svelte-check
 npm run build && npm start -- --port 6711    # the production server with the built page
 node tools/qa.mjs http://localhost:6711      # a host and bots play through the page in WebKit, 390 px
@@ -99,7 +100,7 @@ The QA script borrows Playwright from Folio's checkout next door (`../folio/node
 
 This mirrors Würfle and Stammtisch:
 
-- `ci.yml` runs the typecheck, the tests and the build, then smoke-tests the production server: the
+- `ci.yml` runs the typecheck, the unit tests and the build, then smoke-tests the production server: the
   page and its headers, a table with a guest and a bot, the deal on the guest's stream with only
   their own hand in it, a move refused.
 - `docker-publish.yml` gates on `ci.yml`, then pushes `ghcr.io/ewolution94/yksi:latest` for amd64
