@@ -1,0 +1,9 @@
+# For trying the image locally (it builds from source). The NAS runs deploy/portainer-stack.yml.
+services:
+  yksi:
+    build: .
+    image: ghcr.io/ewolution94/yksi:latest
+    container_name: yksi
+    restart: unless-stopped
+    ports:
+      - "8080:8080"

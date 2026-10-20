@@ -1,0 +1,18 @@
+{
+  "id": "/",
+  "name": "Yksi",
+  "short_name": "Yksi",
+  "description": "Farbe oder Zahl, und mit der letzten Karte „yksi!“ rufen. Gegen Bots oder mit Freunden am Tisch.",
+  "lang": "de",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#e8ebe7",
+  "theme_color": "#f6f7f4",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
