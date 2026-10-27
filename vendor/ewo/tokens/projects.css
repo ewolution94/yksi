@@ -74,6 +74,22 @@
      inks. */
   --ewo-project-yksi:   light-dark(#007183, #49d2ea);
   --ewo-project-yksi-2: light-dark(#866500, #fbd530);
+  /* Skibbo: the fuchsia of its 9 to 12 (the enamel plates that finish a pile) and the sky blue of
+     its 1s; the app itself is light only, enamel on a lime-washed wall. */
+  --ewo-project-skibbo:   light-dark(#9f2294, #ea7bdd);
+  --ewo-project-skibbo-2: light-dark(#0068a7, #78c7fd);
+  /* Randomiser: the meeting's wheel at the fair. Candy-apple red (the tent's, nudged towards
+     vermilion between Schätzle's red and Clinch's orange) and the bulbs' gold. */
+  --ewo-project-randomiser:   light-dark(#c8341a, #ff7458);
+  --ewo-project-randomiser-2: light-dark(#8a6400, #f2b134);
+  /* CurveExtreme: Ultraviolet leads (the curve), Ember second (its head); between Axioma's
+     blue-violet and Verso's plum, and the only black card on Aale Spiele. */
+  --ewo-project-curveextreme:   light-dark(#8226dc, #b07aff);
+  --ewo-project-curveextreme-2: light-dark(#9a5600, #ffa133);
+  /* PokeProxy: the green of a self-healing cutting mat and the yellow of its grid lines; the app
+     itself stays monochrome, the cards bring the colour. */
+  --ewo-project-pokeproxy:   light-dark(#0b7a55, #4fd6a5);
+  --ewo-project-pokeproxy-2: light-dark(#8a6500, #f2cf4a);
 }
 
 [data-ewo-project='clinch']  { --ewo-accent: var(--ewo-project-clinch);  --ewo-accent-2: var(--ewo-project-clinch-2); }
@@ -93,6 +109,10 @@
 [data-ewo-project='stammtisch'] { --ewo-accent: var(--ewo-project-stammtisch); --ewo-accent-2: var(--ewo-project-stammtisch-2); }
 [data-ewo-project='wuerfle'] { --ewo-accent: var(--ewo-project-wuerfle); --ewo-accent-2: var(--ewo-project-wuerfle-2); }
 [data-ewo-project='yksi'] { --ewo-accent: var(--ewo-project-yksi); --ewo-accent-2: var(--ewo-project-yksi-2); }
+[data-ewo-project='skibbo'] { --ewo-accent: var(--ewo-project-skibbo); --ewo-accent-2: var(--ewo-project-skibbo-2); }
+[data-ewo-project='randomiser'] { --ewo-accent: var(--ewo-project-randomiser); --ewo-accent-2: var(--ewo-project-randomiser-2); }
+[data-ewo-project='curveextreme'] { --ewo-accent: var(--ewo-project-curveextreme); --ewo-accent-2: var(--ewo-project-curveextreme-2); }
+[data-ewo-project='pokeproxy'] { --ewo-accent: var(--ewo-project-pokeproxy); --ewo-accent-2: var(--ewo-project-pokeproxy-2); }
 [data-ewo-project='cantina'],
 [data-ewo-project='census'],
 [data-ewo-project='landing'] { --ewo-accent: var(--ewo-fg-2); --ewo-accent-2: var(--ewo-fg); }
