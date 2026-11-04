@@ -1,19 +1,28 @@
-// Applies the saved theme and language before first paint, so there's no flash of the wrong one,
-// and pins theme-color to the theme (it colours an installed app's status bar). The keys are the
-// family's (`ewo:theme`, `ewo:lang`). Yksi speaks German first: no language key means Deutsch, and
-// System is saved as 'system'. No theme key means System. Keep in step with src/lib/i18n.svelte.ts
-// (storedChoice, systemLang) and Folio's setTheme.
+// Applies the theme and language before first paint, so there's no flash of the wrong one, and pins
+// theme-color to the theme (it colours an installed app's status bar): the ones saved on this device
+// (the family's keys `ewo:theme`, `ewo:lang`; Default saves no key; an older pick of System, saved as
+// 'system', follows the browser), else Dashboard's (#ewo-config, which the server puts first in <head>), else
+// the built-in ones: the system's theme, and Deutsch, since Yksi speaks German first. Keep in step
+// with src/lib/i18n.svelte.ts (systemLang), src/lib/theme.ts and src/lib/defaults.ts.
+var ewoConfig = {};
 try {
-  var theme = localStorage.getItem('ewo:theme');
+  ewoConfig = JSON.parse(document.getElementById('ewo-config').textContent) || {};
+} catch (e) {}
+try {
+  var theme, lang;
+  try {
+    theme = localStorage.getItem('ewo:theme');
+    lang = localStorage.getItem('ewo:lang');
+  } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') theme = ewoConfig.theme;
   if (theme === 'light' || theme === 'dark') {
     document.documentElement.dataset.theme = theme;
     var metas = document.querySelectorAll('meta[name="theme-color"]');
     for (var i = 0; i < metas.length; i++) metas[i].content = theme === 'light' ? '#f6f7f4' : '#19221f';
   }
-  var lang = localStorage.getItem('ewo:lang');
-  if (lang !== 'en' && lang !== 'de' && lang !== 'system') lang = 'de';
+  if (lang !== 'en' && lang !== 'de' && lang !== 'system') lang = ewoConfig.lang === 'en' || ewoConfig.lang === 'de' ? ewoConfig.lang : 'de';
   if (lang === 'system') {
-    // System: the first of the browser's languages the game speaks, English otherwise.
+    // An older System: the first of the browser's languages the game speaks, English otherwise.
     var tags = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
     lang = 'en';
     for (var j = 0; j < tags.length; j++) {

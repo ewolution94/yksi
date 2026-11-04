@@ -1,0 +1,9 @@
+{
+  "app": "yksi",
+  "version": 1,
+  "settings": {
+    "lang": { "family": true, "default": "de" },
+    "theme": { "family": true },
+    "sounds": { "family": true }
+  }
+}

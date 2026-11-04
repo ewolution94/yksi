@@ -1,5 +1,6 @@
 // Production server: the tables (server/api.mjs), the built page from ../dist and the Census
-// forwarder. No dependencies.
+// forwarder, and puts Dashboard's defaults into the page (Folio's config-server; the manifest is
+// public/ewo.config.json). No dependencies.
 //
 //   PORT=8080 HOST=0.0.0.0 node server/server.mjs
 //
@@ -14,6 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { createCensus } from './census.mjs';
 import { createApi } from './api.mjs';
 import { createRooms } from './rooms.mjs';
+import { createConfig } from '../vendor/ewo/elements/config-server.js';
 
 const portFlag = process.argv.indexOf('--port');
 const PORT = Number(portFlag > -1 ? process.argv[portFlag + 1] : (process.env.PORT ?? 8080));
@@ -67,6 +69,29 @@ const ticker = setInterval(() => games.tick(), 5000);
 ticker.unref();
 const compressed = new Map();
 
+// Dashboard's values for this app (the language, theme and sounds a device that hasn't picked
+// starts from), checked against the manifest. Until Dashboard answers, and whenever it's down, the
+// built-in ones: the page as it ships. Never part of /healthz.
+const config = createConfig({
+  manifest: JSON.parse(await readFile(path.join(DIST, 'ewo.config.json'), 'utf8')),
+  url: process.env.DASHBOARD_URL ?? '',
+});
+config.start();
+
+// The page carries the values, so its bodies are kept for the current values only.
+let pages = { etag: '', bodies: new Map() };
+async function page(entry, encoding) {
+  if (pages.etag !== config.etag()) pages = { etag: config.etag(), bodies: new Map() };
+  const key = `${entry.mtime.getTime()}:${encoding ?? 'identity'}`;
+  let body = pages.bodies.get(key);
+  if (!body) {
+    const raw = Buffer.from(config.inject(await readFile(entry.file, 'utf8')));
+    body = encoding === 'br' ? zlib.brotliCompressSync(raw) : encoding === 'gzip' ? zlib.gzipSync(raw) : raw;
+    pages.bodies.set(key, body);
+  }
+  return body;
+}
+
 async function resolveFile(pathname) {
   let decoded;
   try {
@@ -104,6 +129,15 @@ async function serveStatic(req, res) {
 
   const accept = req.headers['accept-encoding'] ?? '';
   const encoding = /\bbr\b/.test(accept) ? 'br' : /\bgzip\b/.test(accept) ? 'gzip' : null;
+
+  // The page carries Dashboard's values (#ewo-config, a data block the CSP allows).
+  if (entry.file === path.join(DIST, 'index.html')) {
+    const body = await page(entry, encoding);
+    res.writeHead(200, { ...headers, 'content-length': body.length, vary: 'accept-encoding', ...(encoding && { 'content-encoding': encoding }) });
+    res.end(req.method === 'HEAD' ? undefined : body);
+    return;
+  }
+
   if (encoding && COMPRESSIBLE.has(ext) && entry.size < 8 * 1024 * 1024) {
     const key = `${entry.file}:${entry.mtime.getTime()}:${encoding}`;
     let body = compressed.get(key);
